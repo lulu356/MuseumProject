@@ -1,0 +1,380 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="Хранилище MuseumModel" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Exponat">
+          <Key>
+            <PropertyRef Name="Exponat_ID" />
+          </Key>
+          <Property Name="Exponat_ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name_Exponat" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Description" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="ID_zal" Type="int" />
+        </EntityType>
+        <EntityType Name="Kontaks">
+          <Key>
+            <PropertyRef Name="ID_Kontaks" />
+          </Key>
+          <Property Name="ID_Kontaks" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Oficial_Name" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="Address" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="Phone" Type="nvarchar" MaxLength="20" Nullable="false" />
+          <Property Name="Mail" Type="nvarchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="sysdiagrams">
+          <Key>
+            <PropertyRef Name="diagram_id" />
+          </Key>
+          <Property Name="name" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="principal_id" Type="int" Nullable="false" />
+          <Property Name="diagram_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="version" Type="int" />
+          <Property Name="definition" Type="varbinary(max)" />
+        </EntityType>
+        <EntityType Name="User">
+          <Key>
+            <PropertyRef Name="ID_User" />
+          </Key>
+          <Property Name="ID_User" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Login" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Password" Type="nvarchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Vistavka">
+          <Key>
+            <PropertyRef Name="ID_Vistavka" />
+          </Key>
+          <Property Name="ID_Vistavka" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Exhibition_Name" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="Opisanie" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="ID_Zal" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Zal">
+          <Key>
+            <PropertyRef Name="ID_Zal" />
+          </Key>
+          <Property Name="ID_Zal" Type="int" Nullable="false" />
+          <Property Name="Zal" Type="int" Nullable="false" />
+        </EntityType>
+        <!--Ошибки, обнаруженные при создании:
+предупреждение 6002: В таблице или представлении "Museum.dbo.Expon" не определен первичный ключ. Ключ был выведен, а определение таблицы или представления было создано в режиме только для чтения.-->
+        <EntityType Name="Expon">
+          <Key>
+            <PropertyRef Name="Exponat_ID" />
+            <PropertyRef Name="Name_Exponat" />
+            <PropertyRef Name="Description" />
+            <PropertyRef Name="Zal" />
+          </Key>
+          <Property Name="Exponat_ID" Type="int" Nullable="false" />
+          <Property Name="Name_Exponat" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Description" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Zal" Type="int" Nullable="false" />
+        </EntityType>
+        <!--Ошибки, обнаруженные при создании:
+предупреждение 6002: В таблице или представлении "Museum.dbo.VistavVivod" не определен первичный ключ. Ключ был выведен, а определение таблицы или представления было создано в режиме только для чтения.-->
+        <EntityType Name="VistavVivod">
+          <Key>
+            <PropertyRef Name="ID_Vistavka" />
+            <PropertyRef Name="Exhibition_Name" />
+            <PropertyRef Name="Opisanie" />
+            <PropertyRef Name="Zal" />
+          </Key>
+          <Property Name="ID_Vistavka" Type="int" Nullable="false" />
+          <Property Name="Exhibition_Name" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="Opisanie" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="Zal" Type="int" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_Exponat_Zal">
+          <End Role="Zal" Type="Self.Zal" Multiplicity="0..1" />
+          <End Role="Exponat" Type="Self.Exponat" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Zal">
+              <PropertyRef Name="ID_Zal" />
+            </Principal>
+            <Dependent Role="Exponat">
+              <PropertyRef Name="ID_zal" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Vistavka_Zal">
+          <End Role="Zal" Type="Self.Zal" Multiplicity="1" />
+          <End Role="Vistavka" Type="Self.Vistavka" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Zal">
+              <PropertyRef Name="ID_Zal" />
+            </Principal>
+            <Dependent Role="Vistavka">
+              <PropertyRef Name="ID_Zal" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="Хранилище MuseumModelContainer">
+          <EntitySet Name="Exponat" EntityType="Self.Exponat" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Kontaks" EntityType="Self.Kontaks" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="User" EntityType="Self.User" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Vistavka" EntityType="Self.Vistavka" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Zal" EntityType="Self.Zal" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Expon" EntityType="Self.Expon" store:Type="Views" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [Expon].[Exponat_ID] AS [Exponat_ID], 
+    [Expon].[Name_Exponat] AS [Name_Exponat], 
+    [Expon].[Description] AS [Description], 
+    [Expon].[Zal] AS [Zal]
+    FROM [dbo].[Expon] AS [Expon]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="VistavVivod" EntityType="Self.VistavVivod" store:Type="Views" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [VistavVivod].[ID_Vistavka] AS [ID_Vistavka], 
+    [VistavVivod].[Exhibition_Name] AS [Exhibition_Name], 
+    [VistavVivod].[Opisanie] AS [Opisanie], 
+    [VistavVivod].[Zal] AS [Zal]
+    FROM [dbo].[VistavVivod] AS [VistavVivod]</DefiningQuery>
+          </EntitySet>
+          <AssociationSet Name="FK_Exponat_Zal" Association="Self.FK_Exponat_Zal">
+            <End Role="Zal" EntitySet="Zal" />
+            <End Role="Exponat" EntitySet="Exponat" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Vistavka_Zal" Association="Self.FK_Vistavka_Zal">
+            <End Role="Zal" EntitySet="Zal" />
+            <End Role="Vistavka" EntitySet="Vistavka" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="MuseumModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Exponat">
+          <Key>
+            <PropertyRef Name="Exponat_ID" />
+          </Key>
+          <Property Name="Exponat_ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name_Exponat" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Description" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="ID_zal" Type="Int32" />
+          <NavigationProperty Name="Zal" Relationship="MuseumModel.FK_Exponat_Zal" FromRole="Exponat" ToRole="Zal" />
+        </EntityType>
+        <EntityType Name="Kontaks">
+          <Key>
+            <PropertyRef Name="ID_Kontaks" />
+          </Key>
+          <Property Name="ID_Kontaks" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Oficial_Name" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Address" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Phone" Type="String" MaxLength="20" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Mail" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+        </EntityType>
+        <EntityType Name="sysdiagrams">
+          <Key>
+            <PropertyRef Name="diagram_id" />
+          </Key>
+          <Property Name="name" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="principal_id" Type="Int32" Nullable="false" />
+          <Property Name="diagram_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="version" Type="Int32" />
+          <Property Name="definition" Type="Binary" MaxLength="Max" FixedLength="false" />
+        </EntityType>
+        <EntityType Name="User">
+          <Key>
+            <PropertyRef Name="ID_User" />
+          </Key>
+          <Property Name="ID_User" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Login" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Password" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Vistavka">
+          <Key>
+            <PropertyRef Name="ID_Vistavka" />
+          </Key>
+          <Property Name="ID_Vistavka" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Exhibition_Name" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Opisanie" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="ID_Zal" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Zal" Relationship="Self.FK_Vistavka_Zal" FromRole="Vistavka" ToRole="Zal" />
+        </EntityType>
+        <EntityType Name="Zal">
+          <Key>
+            <PropertyRef Name="ID_Zal" />
+          </Key>
+          <Property Name="ID_Zal" Type="Int32" Nullable="false" />
+          <Property Name="Zal1" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Vistavka" Relationship="Self.FK_Vistavka_Zal" FromRole="Zal" ToRole="Vistavka" />
+          <NavigationProperty Name="Exponat" Relationship="MuseumModel.FK_Exponat_Zal" FromRole="Zal" ToRole="Exponat" />
+        </EntityType>
+        <Association Name="FK_Vistavka_Zal">
+          <End Role="Zal" Type="Self.Zal" Multiplicity="1" />
+          <End Role="Vistavka" Type="Self.Vistavka" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Zal">
+              <PropertyRef Name="ID_Zal" />
+            </Principal>
+            <Dependent Role="Vistavka">
+              <PropertyRef Name="ID_Zal" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="Entities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Exponat" EntityType="Self.Exponat" />
+          <EntitySet Name="Kontaks" EntityType="Self.Kontaks" />
+          <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" />
+          <EntitySet Name="User" EntityType="Self.User" />
+          <EntitySet Name="Vistavka" EntityType="Self.Vistavka" />
+          <EntitySet Name="Zal" EntityType="Self.Zal" />
+          <AssociationSet Name="FK_Vistavka_Zal" Association="Self.FK_Vistavka_Zal">
+            <End Role="Zal" EntitySet="Zal" />
+            <End Role="Vistavka" EntitySet="Vistavka" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Exponat_Zal" Association="MuseumModel.FK_Exponat_Zal">
+            <End Role="Zal" EntitySet="Zal" />
+            <End Role="Exponat" EntitySet="Exponat" />
+          </AssociationSet>
+          <EntitySet Name="Expon" EntityType="MuseumModel.Expon" />
+          <EntitySet Name="VistavVivod" EntityType="MuseumModel.VistavVivod" />
+        </EntityContainer>
+        <Association Name="FK_Exponat_Zal">
+          <End Type="MuseumModel.Zal" Role="Zal" Multiplicity="0..1" />
+          <End Type="MuseumModel.Exponat" Role="Exponat" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Zal">
+              <PropertyRef Name="ID_Zal" />
+            </Principal>
+            <Dependent Role="Exponat">
+              <PropertyRef Name="ID_zal" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="Expon">
+          <Key>
+            <PropertyRef Name="Exponat_ID" />
+            <PropertyRef Name="Name_Exponat" />
+            <PropertyRef Name="Description" />
+            <PropertyRef Name="Zal" />
+          </Key>
+          <Property Name="Exponat_ID" Type="Int32" Nullable="false" />
+          <Property Name="Name_Exponat" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Description" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Zal" Type="Int32" Nullable="false" />
+        </EntityType>
+        <EntityType Name="VistavVivod">
+          <Key>
+            <PropertyRef Name="ID_Vistavka" />
+            <PropertyRef Name="Exhibition_Name" />
+            <PropertyRef Name="Opisanie" />
+            <PropertyRef Name="Zal" />
+          </Key>
+          <Property Name="ID_Vistavka" Type="Int32" Nullable="false" />
+          <Property Name="Exhibition_Name" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Opisanie" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Zal" Type="Int32" Nullable="false" />
+        </EntityType>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="Хранилище MuseumModelContainer" CdmEntityContainer="Entities">
+          <EntitySetMapping Name="Exponat">
+            <EntityTypeMapping TypeName="MuseumModel.Exponat">
+              <MappingFragment StoreEntitySet="Exponat">
+                <ScalarProperty Name="Exponat_ID" ColumnName="Exponat_ID" />
+                <ScalarProperty Name="Name_Exponat" ColumnName="Name_Exponat" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="ID_zal" ColumnName="ID_zal" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Kontaks">
+            <EntityTypeMapping TypeName="MuseumModel.Kontaks">
+              <MappingFragment StoreEntitySet="Kontaks">
+                <ScalarProperty Name="ID_Kontaks" ColumnName="ID_Kontaks" />
+                <ScalarProperty Name="Oficial_Name" ColumnName="Oficial_Name" />
+                <ScalarProperty Name="Address" ColumnName="Address" />
+                <ScalarProperty Name="Phone" ColumnName="Phone" />
+                <ScalarProperty Name="Mail" ColumnName="Mail" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="sysdiagrams">
+            <EntityTypeMapping TypeName="MuseumModel.sysdiagrams">
+              <MappingFragment StoreEntitySet="sysdiagrams">
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="principal_id" ColumnName="principal_id" />
+                <ScalarProperty Name="diagram_id" ColumnName="diagram_id" />
+                <ScalarProperty Name="version" ColumnName="version" />
+                <ScalarProperty Name="definition" ColumnName="definition" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="User">
+            <EntityTypeMapping TypeName="MuseumModel.User">
+              <MappingFragment StoreEntitySet="User">
+                <ScalarProperty Name="ID_User" ColumnName="ID_User" />
+                <ScalarProperty Name="Login" ColumnName="Login" />
+                <ScalarProperty Name="Password" ColumnName="Password" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Vistavka">
+            <EntityTypeMapping TypeName="MuseumModel.Vistavka">
+              <MappingFragment StoreEntitySet="Vistavka">
+                <ScalarProperty Name="ID_Vistavka" ColumnName="ID_Vistavka" />
+                <ScalarProperty Name="Exhibition_Name" ColumnName="Exhibition_Name" />
+                <ScalarProperty Name="Opisanie" ColumnName="Opisanie" />
+                <ScalarProperty Name="ID_Zal" ColumnName="ID_Zal" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Zal">
+            <EntityTypeMapping TypeName="MuseumModel.Zal">
+              <MappingFragment StoreEntitySet="Zal">
+                <ScalarProperty Name="ID_Zal" ColumnName="ID_Zal" />
+                <ScalarProperty Name="Zal1" ColumnName="Zal" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Expon">
+            <EntityTypeMapping TypeName="MuseumModel.Expon">
+              <MappingFragment StoreEntitySet="Expon">
+                <ScalarProperty Name="Zal" ColumnName="Zal" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="Name_Exponat" ColumnName="Name_Exponat" />
+                <ScalarProperty Name="Exponat_ID" ColumnName="Exponat_ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="VistavVivod">
+            <EntityTypeMapping TypeName="MuseumModel.VistavVivod">
+              <MappingFragment StoreEntitySet="VistavVivod">
+                <ScalarProperty Name="Zal" ColumnName="Zal" />
+                <ScalarProperty Name="Opisanie" ColumnName="Opisanie" />
+                <ScalarProperty Name="Exhibition_Name" ColumnName="Exhibition_Name" />
+                <ScalarProperty Name="ID_Vistavka" ColumnName="ID_Vistavka" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="Нет" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
